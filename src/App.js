@@ -13,28 +13,19 @@ export default class App extends Component {
     }
   }
 
-  testSelectableFields = () => {
-    let elements = document.getElementsByClassName('cell')
-    for (let i = 0; i < elements.length; i++) {
-      let isSelectable = elements[i].classList.contains('selectable');
-      console.log(isSelectable)
-      return isSelectable
-    }
-  }
-
-  fildIsAvailable = (id) => {
-    return document.getElementById(id).classList.contains('selectable') ? false : true
+  fieldIsNotSelected = (id) => {
+    console.log('Field is not selected: ', document.getElementById(id).classList.contains('selected'))
+    return document.getElementById(id).classList.contains('selected') ? false : true
   }
 
   setNewField = (id, el) => {
-    // console.log('set new field')
     if (this.state.level === 0) {
-      el.target.classList.add('start-field')
+      el.target.classList.add('selected')
       el.target.style.backgroundColor = 'black'
       this.setNextFields(id)
-    } else if (this.state.level > 0 && el.target.classList.contains('selectable')) {
+    } else if (el.target.classList.contains('selectable') && !el.target.classList.contains('selected')) {
       el.target.style.backgroundColor = 'black'
-      el.target.classList.remove('selectable')
+      el.target.classList.add('selected')
       this.setNextFields(id)
     } else {
       alert('This is not selectable!')
@@ -50,20 +41,25 @@ export default class App extends Component {
   }
 
   getNextField = (x, y) => {
-    // console.log('get next field')
     let clickableFields = []
     clickableFields.push([x - 3, y], [x + 3, y], [x, y - 3], [x, y + 3], [x - 2, y - 2], [x - 2, y + 2], [x + 2, y - 2], [x + 2, y + 2])
     let fields = []
     clickableFields.map((pos) => {
-      if ((pos[0] >= 0 && pos[0] <= 9) && (pos[1] >= 0 && pos[1] <= 9) && this.fildIsAvailable(pos[0] + "/" + pos[1])) {
+      if ((pos[0] >= 0 && pos[0] <= 9) && (pos[1] >= 0 && pos[1] <= 9) && this.fieldIsNotSelected(pos[0] + "/" + pos[1])) {
         let clickableFieldsIds = pos[0] + '/' + pos[1]
         fields.push(document.getElementById(clickableFieldsIds))
         return fields;
       }
     })
+    if (fields.length === 0) {
+      alert('No more selectable fields!')
+      return
+    }
     let item = fields[Math.floor(Math.random() * fields.length)]
     item.style.backgroundColor = 'lightgray'
-    item.classList.add('selectable')
+    if (!item.classList.contains('selected')) {
+      item.classList.add('selectable')
+    }
   }
 
   createGrid = (x) => {
