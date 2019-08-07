@@ -1,0 +1,52 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  > * {
+    box-sizing: border-box;
+  }
+  &-header {
+    height: 7vh;
+    background: #cfbaba;
+    padding: 10px;
+    text-align: center;
+    .title {
+      margin: 0;
+    }
+  }
+  &-body {
+    height: 88vh;
+    width: 88vh;
+    margin: 0 auto;
+    vertical-align: baseline;
+    line-height: 0;
+    .cell {
+      margin: 0;
+      border-right: 1px solid black;
+      border-bottom: 1px solid black;
+      display: inline-block;
+      box-sizing: border-box;
+      line-height: 0;
+      font-size: 0;
+      &:nth-child(10n + 1) {
+        border-left: 1px solid black;
+      }
+      &:nth-child(-n + 10) {
+        border-top: 1px solid black;        
+      }
+      &.selected {
+        background-color: rgb(143, 38, 38);
+      }
+    }
+  }
+  &-footer {
+    height: 5vh;
+    background: #cfbaba;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    .game-stats {
+      margin: 0;
+    }
+  }
+}
