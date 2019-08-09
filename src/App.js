@@ -7,14 +7,13 @@ export default class App extends Component {
 
     this.state = {
       level: 0,
-      selected: false,
-      startFieldClass: 'start-field',
-      selectableClass: 'selectable'
+      lives: 0,
+      counter: 0
     }
   }
 
   fieldIsNotSelected = (id) => {
-    console.log('Field is not selected: ', document.getElementById(id).classList.contains('selected'))
+    // console.log('Field is not selected: ', document.getElementById(id).classList.contains('selected'))
     return document.getElementById(id).classList.contains('selected') ? false : true
   }
 
@@ -33,14 +32,36 @@ export default class App extends Component {
   }
 
   setNextFields = (id) => {
-    let x = parseInt(id.split('/')[0])
-    let y = parseInt(id.split('/')[1])
+    // let x = parseInt(id.split('/')[0])
+    // let y = parseInt(id.split('/')[1])
     let newLevel = this.state.level + 1
-    this.setState({ level: newLevel })
-    this.getNextField(x, y)
+    let lives = this.state.lives + 1
+    this.setState({ level: newLevel, lives: lives }, () => this.iterate(id))
+    // console.log(this.state.level)
+    // this.getNextField(x, y)
+    // this.iterate(id)
+    // this.getNextField(x, y)
   }
 
-  getNextField = (x, y) => {
+  iterate = (id) => {
+    // let itemId = item.getAttribute('id')
+    let x = parseInt(id.split('/')[0])
+    let y = parseInt(id.split('/')[1])
+
+    // let level = this.state.level
+    // console.log(level)
+    // for(let i = 0; i < level; i++) {
+    // this.getNextField(x, y)
+    let count = this.state.counter
+    // if (count <= level) {
+    count++
+    // console.log(this.state.counter)
+    this.setState({ counter: count }, () => this.getNextField(x, y, count))
+    // }
+    // }
+  }
+
+  getNextField = (x, y, count) => {
     let clickableFields = []
     clickableFields.push([x - 3, y], [x + 3, y], [x, y - 3], [x, y + 3], [x - 2, y - 2], [x - 2, y + 2], [x + 2, y - 2], [x + 2, y + 2])
     let fields = []
@@ -48,7 +69,6 @@ export default class App extends Component {
       if ((pos[0] >= 0 && pos[0] <= 9) && (pos[1] >= 0 && pos[1] <= 9) && this.fieldIsNotSelected(pos[0] + "/" + pos[1])) {
         let clickableFieldsIds = pos[0] + '/' + pos[1]
         fields.push(document.getElementById(clickableFieldsIds))
-        return fields;
       }
     })
     if (fields.length === 0) {
@@ -56,9 +76,27 @@ export default class App extends Component {
       return
     }
     let item = fields[Math.floor(Math.random() * fields.length)]
+    // console.log(item.getAttribute('id'))
     item.style.backgroundColor = 'lightgray'
+    console.log('count', count)
+    let countNr = document.createElement('span')
+    let text = document.createTextNode(count)
+    countNr.classList.add('counter')
+    countNr.appendChild(text)
+    item.appendChild(countNr)
+    // innerHTML += count
     if (!item.classList.contains('selected')) {
       item.classList.add('selectable')
+    }
+
+    console.log(this.state.counter, this.state.level)
+
+    if (this.state.counter < this.state.level) {
+      this.iterate(item.getAttribute('id'))
+    } else {
+      let count = this.state.counter
+      count = 0
+      this.setState({counter: count})
     }
   }
 
@@ -89,7 +127,7 @@ export default class App extends Component {
           <h4 className="game-stats">Game stats:</h4>
           <h6 className="game-stats">Timer: 15 seconds</h6>
           <h6 className="game-stats">Left to click: 15</h6>
-          <h6 className="game-stats">Lives: 15</h6>
+          <h6 className="game-stats">Lives: {this.state.lives}</h6>
           <h6 className="game-stats">Level: {this.state.level}</h6>
         </footer>
 

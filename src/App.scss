@@ -19,8 +19,10 @@
     width: 88vh;
     margin: 0 auto;
     vertical-align: baseline;
-    line-height: 0;
+    // line-height: 0;
+    font-size: 0;
     .cell {
+      position: relative;
       margin: 0;
       border-right: 1px solid black;
       border-bottom: 1px solid black;
@@ -28,6 +30,14 @@
       box-sizing: border-box;
       line-height: 0;
       font-size: 0;
+      color: #000;
+      .counter {
+        font-size: 18px;
+        position: absolute;
+        margin-top: 50%;
+        margin-left: 50%;
+        transform: translate3d(-50%, -50%, 0)
+      }
       &:nth-child(10n + 1) {
         border-left: 1px solid black;
       }
