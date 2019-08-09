@@ -11,57 +11,28 @@ export default class App extends Component {
       counter: 0
     }
   }
-
+  // #696D32
   fieldIsNotSelected = (id) => {
-    // console.log('Field is not selected: ', document.getElementById(id).classList.contains('selected'))
     return document.getElementById(id).classList.contains('selected') ? false : true
   }
 
-  setNewField = (id, el) => {
-    if (this.state.level === 0) {
-      el.target.classList.add('selected')
-      el.target.style.backgroundColor = 'black'
-      this.setNextFields(id)
-    } else if (el.target.classList.contains('selectable') && !el.target.classList.contains('selected')) {
-      el.target.style.backgroundColor = 'black'
-      el.target.classList.add('selected')
-      this.setNextFields(id)
-    } else {
-      alert('This is not selectable!')
-    }
-  }
-
-  setNextFields = (id) => {
-    // let x = parseInt(id.split('/')[0])
-    // let y = parseInt(id.split('/')[1])
+  startLevel = (id, el) => {
+    let field = el.target
+    field.classList.add('selected')
     let newLevel = this.state.level + 1
     let lives = this.state.lives + 1
-    this.setState({ level: newLevel, lives: lives }, () => this.iterate(id))
-    // console.log(this.state.level)
-    // this.getNextField(x, y)
-    // this.iterate(id)
-    // this.getNextField(x, y)
+    this.setState({ level: newLevel, lives: lives }, () => this.setNextField(id))
   }
 
-  iterate = (id) => {
-    // let itemId = item.getAttribute('id')
+  setNextField = (id) => {
     let x = parseInt(id.split('/')[0])
     let y = parseInt(id.split('/')[1])
-
-    // let level = this.state.level
-    // console.log(level)
-    // for(let i = 0; i < level; i++) {
-    // this.getNextField(x, y)
     let count = this.state.counter
-    // if (count <= level) {
     count++
-    // console.log(this.state.counter)
-    this.setState({ counter: count }, () => this.getNextField(x, y, count))
-    // }
-    // }
+    this.setState({ counter: count }, () => this.getNextFields(x, y, count))
   }
 
-  getNextField = (x, y, count) => {
+  getNextFields = (x, y, count) => {
     let clickableFields = []
     clickableFields.push([x - 3, y], [x + 3, y], [x, y - 3], [x, y + 3], [x - 2, y - 2], [x - 2, y + 2], [x + 2, y - 2], [x + 2, y + 2])
     let fields = []
@@ -76,27 +47,20 @@ export default class App extends Component {
       return
     }
     let item = fields[Math.floor(Math.random() * fields.length)]
-    // console.log(item.getAttribute('id'))
-    item.style.backgroundColor = 'lightgray'
-    console.log('count', count)
     let countNr = document.createElement('span')
     let text = document.createTextNode(count)
     countNr.classList.add('counter')
     countNr.appendChild(text)
     item.appendChild(countNr)
-    // innerHTML += count
     if (!item.classList.contains('selected')) {
       item.classList.add('selectable')
     }
-
-    console.log(this.state.counter, this.state.level)
-
     if (this.state.counter < this.state.level) {
-      this.iterate(item.getAttribute('id'))
+      this.setNextField(item.getAttribute('id'))
     } else {
       let count = this.state.counter
       count = 0
-      this.setState({counter: count})
+      this.setState({ counter: count })
     }
   }
 
@@ -105,7 +69,7 @@ export default class App extends Component {
     for (let row = 0; row < x; row++) {
       for (let col = 0; col < x; col++) {
         let id = row + "/" + col
-        grid.push(<div className={this.state.selected ? 'cell selected' : 'cell'} key={id} id={id} style={{ width: '8.8vh', height: '8.8vh', backgroundColor: 'white' }} onClick={this.setNewField.bind(this, id)} ></div>)
+        grid.push(<div className="cell" key={id} id={id} style={{ width: '8.8vh', height: '8.8vh' }} onClick={this.startLevel.bind(this, id)} ></div>)
       };
     };
     return grid

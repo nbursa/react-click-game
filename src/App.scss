@@ -2,12 +2,14 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: #394147;
   > * {
     box-sizing: border-box;
   }
   &-header {
     height: 7vh;
-    background: #cfbaba;
+    background: #394147;
+    color: #fafafa;
     padding: 10px;
     text-align: center;
     .title {
@@ -30,13 +32,15 @@
       box-sizing: border-box;
       line-height: 0;
       font-size: 0;
+      background-color: lighten(#394147, 50%);
       color: #000;
       .counter {
         font-size: 18px;
+        font-weight: 600;
         position: absolute;
         margin-top: 50%;
         margin-left: 50%;
-        transform: translate3d(-50%, -50%, 0)
+        transform: translate3d(-50%, -50%, 0);
       }
       &:nth-child(10n + 1) {
         border-left: 1px solid black;
@@ -45,13 +49,17 @@
         border-top: 1px solid black;        
       }
       &.selected {
-        background-color: rgb(143, 38, 38);
+        background:#316A68;
+      }
+      &.selectable {
+        background: #D0DA5C;
       }
     }
   }
   &-footer {
     height: 5vh;
-    background: #cfbaba;
+    background: #394147;
+    color: #fafafa;
     padding: 10px;
     display: flex;
     justify-content: space-between;
