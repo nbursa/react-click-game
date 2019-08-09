@@ -20,8 +20,10 @@ export default class App extends Component {
     let field = el.target
     field.classList.add('selected')
     let newLevel = this.state.level + 1
-    let lives = this.state.lives + 1
-    this.setState({ level: newLevel, lives: lives }, () => this.setNextField(id))
+    // let lives = this.state.lives + 1
+    // this.setState({ level: newLevel, lives: lives }, () => this.setNextField(id))
+    this.setState({ level: newLevel}, () => this.setNextField(id))
+    // this.setNextField(id)
   }
 
   setNextField = (id) => {
@@ -46,17 +48,21 @@ export default class App extends Component {
       alert('No more selectable fields!')
       return
     }
-    let item = fields[Math.floor(Math.random() * fields.length)]
-    let countNr = document.createElement('span')
+    this.generateClickableFields(fields, count)
+  }
+
+  generateClickableFields = (fields, count) => {
+    let field = fields[Math.floor(Math.random() * fields.length)]
+    let countNum = document.createElement('span')
     let text = document.createTextNode(count)
-    countNr.classList.add('counter')
-    countNr.appendChild(text)
-    item.appendChild(countNr)
-    if (!item.classList.contains('selected')) {
-      item.classList.add('selectable')
+    countNum.classList.add('counter')
+    countNum.appendChild(text)
+    field.appendChild(countNum)
+    if (!field.classList.contains('selected')) {
+      field.classList.add('selectable')
     }
     if (this.state.counter < this.state.level) {
-      this.setNextField(item.getAttribute('id'))
+      this.setNextField(field.getAttribute('id'))
     } else {
       let count = this.state.counter
       count = 0
