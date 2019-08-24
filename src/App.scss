@@ -3,26 +3,30 @@
   flex-direction: column;
   overflow: hidden;
   background: #394147;
-  > * {
+
+  >* {
     box-sizing: border-box;
   }
+
   &-header {
     height: 7vh;
     background: #394147;
     color: #fafafa;
     padding: 10px;
     text-align: center;
+
     .title {
       margin: 0;
     }
   }
+
   &-body {
     height: 88vh;
     width: 88vh;
     margin: 0 auto;
     vertical-align: baseline;
-    // line-height: 0;
     font-size: 0;
+
     .cell {
       position: relative;
       margin: 0;
@@ -34,6 +38,8 @@
       font-size: 0;
       background-color: lighten(#394147, 50%);
       color: #000;
+      transition: all .25s ease-in;
+
       .counter {
         font-size: 18px;
         font-weight: 600;
@@ -41,30 +47,50 @@
         margin-top: 50%;
         margin-left: 50%;
         transform: translate3d(-50%, -50%, 0);
+        user-select: none;
+        pointer-events: none;
       }
+
       &:nth-child(10n + 1) {
         border-left: 1px solid black;
       }
+
       &:nth-child(-n + 10) {
-        border-top: 1px solid black;        
+        border-top: 1px solid black;
       }
+
       &.selected {
-        background:#316A68;
+        background: #316A68;
       }
+
       &.selectable {
         background: #D0DA5C;
+        cursor: pointer;
       }
     }
   }
+
   &-footer {
     height: 5vh;
     background: #394147;
     color: #fafafa;
     padding: 10px;
     display: flex;
-    justify-content: space-between;
-    .game-stats {
+
+    .stats-title {
       margin: 0;
+      width: 120px;
+    }
+
+    .stats {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      align-items: center;
+      .game-stats {
+        margin: 0 10px;
+      }
+
     }
   }
 }
