@@ -27,6 +27,76 @@
     vertical-align: baseline;
     font-size: 0;
 
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, .5);
+      .modal {
+        position: absolute;
+        width: 300px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #22272a;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.5);
+        transition: box-shadow .25s ease-in;
+        &:hover {
+          cursor: pointer;
+          background-color: darken(#22272a, 1%);
+          box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+        }
+        &-header {
+          border-bottom: 1px solid transparentize(#f3f3f3, .9);
+          margin-bottom: 20px;
+          .close {
+            width: 20px;
+            height: 20px;
+            display: block;
+            margin-left: auto;
+            margin-bottom: 20px;
+            cursor: pointer;
+            &:before {
+              content: '';
+              display: block;
+              width: 2px;
+              height: 20px;
+              background-color: #f3f3f3;
+              transform: rotate(45deg) translate(6px, -7px);
+            }
+            &:after {
+              content: '';
+              display: block;
+              width: 2px;
+              height: 20px;
+              background-color: #f3f3f3;
+              transform: rotate(-45deg) translate(21px, -8px);
+            }
+          }
+        }
+        &-body {
+          color: #fafafa;
+          font-size: 20px;
+          h4 {
+            text-align: center;
+          }
+          h3 {
+            display: flex;
+            align-items: baseline;
+            span {
+              font-size: 60px;
+              margin: 0 0 0 auto;
+            }
+          }
+        }
+        &.-footer {}
+      }
+    }
+
     .cell {
       position: relative;
       margin: 0;
@@ -39,6 +109,10 @@
       background-color: lighten(#394147, 50%);
       color: #000;
       transition: all .25s ease-in;
+      &:hover {
+        background-color: lighten(#394147, 45%);
+        cursor: pointer;
+      }
 
       .counter {
         font-size: 18px;
@@ -89,6 +163,11 @@
       align-items: center;
       .game-stats {
         margin: 0 10px;
+        font-weight: 300;
+        &-value {
+          font-size: 25px;
+          font-weight: bold;
+        }
       }
 
     }
