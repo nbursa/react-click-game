@@ -25,23 +25,24 @@ export default class App extends Component {
   }
   // #696D32
 
-
   filterClicks = (id, el) => {
-    // console.log(this.state.clickCount)
     let selectable = document.getElementsByClassName('selectable')
     if (selectable.length === 0) {
       this.clearBoard()
+      console.log('Will start new level ... ')
       return this.startLevel(id, el)
     } else if (el.target.classList.contains('selectable')) {
+      console.log('el.target.classList.contains("selectable")')
       let fieldCount = parseInt(el.target.getAttribute('count'))
       if (fieldCount === this.state.clickCount) {
+        console.log('fieldCount === this.state.clickCount ... ')
         el.target.classList.remove('selectable')
-        el.target.classList.add('selected')
         el.target.classList.add('selected')
         let count = this.state.clickCount
         count++
         this.setState({ clickCount: count })
         if (selectable.length === 0) {
+          console.log('selectable.length === 0 ... Should be end? ... ')
           this.setState({ clickCount: 1 })
           this.clearBoard()
           let newLevel = this.state.level + 1
@@ -50,44 +51,49 @@ export default class App extends Component {
           this.setState({ lives: lives })
           let modalText = <div>
             <h4>Congratulations!</h4>
-            <h3>You passed level <span> {this.state.level}</span></h3>
-            <h3>Lives count is <span> {this.state.lives + 1}</span></h3>
+            <h3>Next level: <span> {this.state.level + 1}</span></h3>
+            <h3>Lives count: <span> {this.state.lives + 1}</span></h3>
           </div>
           this.setState({ modal: !this.state.modal, modalText: modalText })
         }
       } else {
-        this.errored()
+        this.errored('You missed the correct field!')
       }
     } else {
-      // alert('Wrong field! You failed!')
-      this.errored()
+      this.errored('Not selectable field!')
     }
   }
 
   setTO = (timeout) => {
-    // let selectable = document.getElementsByClassName('selectable')
-    // console.log(selectable.length)
-    // this.setTO(selectable.length * 2000)
     setTimeout(() => {
       return this.errored();
     }, timeout);
   }
 
-  errored = () => {
+  getSelectableFields = () => {
+    console.log('Get selectable fields ... ')
+    return document.getElementsByClassName('selectable');
+  }
+
+  errored = (string) => {
+    console.log('Errored ... ')
     let selectable = document.getElementsByClassName('selectable');
-    let newLives = this.state.lives - selectable.length;
+    let selectableLength = selectable.length;
+    let newLives = this.state.lives - selectableLength;
     newLives < 1 ? this.setState(initialState) : this.setState({ lives: newLives });
     this.clearBoard();
     let modal = !this.state.modal;
     let modalTxt = <div>
-      <h4>You missed the correct field!</h4>
-      <h3>Back to level <span> {this.state.level}</span></h3>
+      <h4>{string}</h4>
+      <h3>Back to level <span> {this.state.level - 1}</span></h3>
+      <h3>Missed <span> {selectableLength}</span></h3>
       <h3>Lives left <span> {(newLives < 1 ? 1 : newLives)}</span></h3>
     </div>
-    this.setState({ modal: modal, modalText: modalTxt });
+    this.setState({ modal: modal, level: this.state.level -1,  modalText: modalTxt });
   }
 
   clearBoard = () => {
+    console.log('Clearing board ... ')
     let selected = document.getElementsByClassName('selected')
     let selectable = document.getElementsByClassName('selectable')
     let child = document.getElementsByClassName('counter')
@@ -105,24 +111,19 @@ export default class App extends Component {
   }
 
   startLevel = (id, el) => {
+    console.log('Start level ... ')
     let field = el.target
     field.classList.add('selected')
-    // let selectable = document.getElementsByClassName('selectable').length + 1
-    // console.log('start ', selectable)
-    // this.setTO(selectable * 2000)
     this.setNextField(id)
-    let selectable = document.getElementsByClassName('selectable').length + 1
-    console.log('start ', selectable)
   }
 
   setNextField = (id) => {
+    console.log('Set next field ... ')
     let x = parseInt(id.split('/')[0])
     let y = parseInt(id.split('/')[1])
     let count = this.state.counter
     count++
     this.setState({ counter: count }, () => this.getNextFields(x, y, count))
-    let selectable = document.getElementsByClassName('selectable') + 1
-    console.log('setnextfield ', selectable.length)
   }
 
   fieldIsNotSelected = (id) => {
@@ -130,6 +131,7 @@ export default class App extends Component {
   }
 
   getNextFields = (x, y, count) => {
+    console.log('Get next fields ... ')
     let clickableFields = []
     clickableFields.push([x - 3, y], [x + 3, y], [x, y - 3], [x, y + 3], [x - 2, y - 2], [x - 2, y + 2], [x + 2, y - 2], [x + 2, y + 2])
     let fields = []
@@ -144,12 +146,11 @@ export default class App extends Component {
       alert('No more selectable fields!')
       return
     }
-    // let selectable = document.getElementsByClassName('selectable') + 1
-    // console.log('getnextfields ', selectable.length)
     this.generateClickableFields(fields, count)
   }
 
   generateClickableFields = (fields, count) => {
+    console.log('Generate clickable fields ... ')
     let field = fields[Math.floor(Math.random() * fields.length)]
     field.setAttribute('count', count)
     let countNum = document.createElement('span')
@@ -171,17 +172,19 @@ export default class App extends Component {
   }
 
   toggleModal = () => {
+    console.log('Toggle modal ... ')
     let state = !this.state.modalText;
     this.setState({ modal: state })
   }
 
 
   createGrid = (x) => {
+    console.log('Creating grid ... ')
     let grid = []
     for (let row = 0; row < x; row++) {
       for (let col = 0; col < x; col++) {
         let id = row + "/" + col
-        grid.push(<div className="cell" key={id} id={id} style={{ width: '8.8vh', height: '8.8vh' }} onClick={this.filterClicks.bind(this, id)} ></div>)
+        grid.push(<div className="cell" key={id} id={id} style={{ width: '10vh', height: '10vh' }} onClick={this.filterClicks.bind(this, id)} ></div>)
       };
     };
     return grid
@@ -195,18 +198,26 @@ export default class App extends Component {
 
         <header className="App-header">
           <h1 className="title">Click game</h1>
+          <div className="stats">
+            <h6 className="game-stats">Timer: <span className="game-stats-value">15</span></h6>
+            <h6 className="game-stats">Left to click: <span className="game-stats-value">{document.getElementsByClassName('selectable').length}</span></h6>
+            <h6 className="game-stats">Lives: <span className="game-stats-value">{this.state.lives}</span></h6>
+            <h6 className="game-stats">Level: <span className="game-stats-value">{this.state.level}</span></h6>
+          </div>
         </header>
 
         <main className="App-body">
-          {this.createGrid(10)}
+          <div className="grid">
+            {this.createGrid(10)}
+          </div>
 
           {
             modalState && (
-              <div className="modal-backdrop" onClick={() => this.toggleModal()}>
+              <div className="modal-backdrop">
                 <div className="modal">
-                  {/* <div className="modal-header">
+                  <div className="modal-header">
                       <span className="close" onClick={() => this.toggleModal()}></span>
-                    </div> */}
+                    </div>
                   <div className="modal-body">{this.state.modalText}</div>
                   <div className="modal-footer"></div>
                 </div>
@@ -214,17 +225,6 @@ export default class App extends Component {
             )
           }
         </main>
-
-        <footer className="App-footer">
-          <h4 className="stats-title">Game stats:</h4>
-          <div className="stats">
-            <h6 className="game-stats">Timer: <span className="game-stats-value">15</span> seconds</h6>
-            <h6 className="game-stats">Left to click: <span className="game-stats-value">{document.getElementsByClassName('selectable').length}</span></h6>
-            <h6 className="game-stats">Lives: <span className="game-stats-value">{this.state.lives}</span></h6>
-            <h6 className="game-stats">Level: <span className="game-stats-value">{this.state.level}</span></h6>
-          </div>
-        </footer>
-
       </div>
     );
   }
